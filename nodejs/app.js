@@ -33,20 +33,29 @@ var seats = ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9",
     "B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9",
     "C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"];
 
-app.use('/sessions/:id', function (req, res) {
-    pg.connect(conString, function (err, client, done) {
-        if (err) {
-            return console.error('error fetching client from pool', err);
-        }
 
-        client.query('SELECT seat_name from orders_seats where session_id = $1', [req.param('id')], function (err, result) {
-            done();
-
-            if (err) {
-                return console.error('error running query', err);
-            }
-            res.send(result.rows);
+var getAvailableTickets = function (sessionId, callback) {
+    var client = new pg.Client(conString);
+    client.connect();
+    client.query('SELECT seat_name from orders_seats where session_id = $1', [sessionId], function(err, result){
+        var bookedSeats = result.rows.map(function(row){
+            return row.seat_name;
         });
+
+        console.log(seats);
+        console.log(bookedSeats);
+
+        var availableSeats = seats.filter(function (i) {
+            return bookedSeats.indexOf(i) == -1
+        });
+
+        callback(availableSeats);
+    });
+};
+
+app.use('/sessions/:id', function (req, res) {
+    getAvailableTickets(req.param('id'), function(availableTickets){
+        res.send(availableTickets);
     });
 });
 
