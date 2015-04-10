@@ -1,0 +1,3 @@
+dropdb booking_engine
+createdb booking_engine
+psql -U postgres -d booking_engine -a -f db/migration.sql
