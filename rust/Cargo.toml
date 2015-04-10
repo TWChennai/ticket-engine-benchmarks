@@ -1,0 +1,10 @@
+[package]
+name = "booking_engine"
+version = "0.0.1"
+authors = ["Selva/Sathish"]
+
+[dependencies]
+iron = "*"
+router = "*"
+postgres = "0.8"
+rustc-serialize = "0.3.12"
