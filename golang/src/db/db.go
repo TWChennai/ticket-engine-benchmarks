@@ -1,4 +1,4 @@
-package daos
+package db
 
 import (
 	"log"

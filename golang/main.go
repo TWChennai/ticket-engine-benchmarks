@@ -1,22 +1,23 @@
 package main
 
 import (
+	"db"
 	"fmt"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"order"
 	"session"
-	"session/daos"
 )
 
 func main() {
-	fmt.Println("Hello Go!")
-	daos.InitDB()
+
+	db.InitDB()
 	server := &http.Server{
 		Addr:    ":3000",
 		Handler: &Handler{},
 	}
-
+	fmt.Println("Listening on Port: 3000")
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatalf("ERR: %+v", err)
@@ -37,7 +38,7 @@ func (*Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case session.Regexp.MatchString(r.RequestURI) && r.Method == HTTP_GET:
 		session.GetSession(w, r)
 	case order.Regexp.MatchString(r.RequestURI) && r.Method == HTTP_POST:
-		log.Printf("Order. Req: %+v", r)
+		order.CreateOrder(w, r)
 	default:
 		w.WriteHeader(http.StatusNotFound)
 	}
