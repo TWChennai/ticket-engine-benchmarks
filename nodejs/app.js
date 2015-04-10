@@ -73,17 +73,27 @@ app.post('/orders', function (req, res) {
     var tx = new Transaction(client);
     tx.on('error', die);
 
-    tx.begin();
-    tx.query('insert into orders(id) values($1)', [req.id]);
+    getAvailableTickets(sessionId, function(availableSeats){
+        var ticketsNotAvailable = seats.filter(function(seat){
+            return availableSeats.indexOf(seat) == -1;
+        }).length;
 
-    seats.forEach(function (seat) {
-        tx.query('insert into orders_seats(id, session_id, seat_name) values($1, $2, $3)', [req.id, sessionId, seat]);
-    });
-    tx.commit(function(){
-        client.end();
-    });
+        if(response = ticketsNotAvailable > 0){
+            res.send('Tickets not available!');
 
-    res.send('OK');
+        } else {
+            tx.begin();
+            tx.query('insert into orders(id) values($1)', [req.id]);
+
+            seats.forEach(function (seat) {
+                tx.query('insert into orders_seats(id, session_id, seat_name) values($1, $2, $3)', [req.id, sessionId, seat]);
+            });
+            tx.commit(function(){
+                client.end();
+                res.send('OK');
+            });
+        }
+    });
 });
 
 
