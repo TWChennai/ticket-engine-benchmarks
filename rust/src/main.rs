@@ -17,26 +17,21 @@ struct Session {
 
 fn main() {
     let mut router = Router::new();
-    router.get("/", handler);
-    router.get("/:query", handler);
+    router.get("/sessions/:session_id", session_details);
 
     Iron::new(router).http("localhost:3000").unwrap();
 
-    fn handler(req: &mut Request) -> IronResult<Response> {
-        let query = req.extensions.get::<Router>().unwrap().find("query").unwrap_or("/");
+    fn session_details(req: &mut Request) -> IronResult<Response> {
+
+        let query = req.extensions.get::<Router>().unwrap().find("session_id").unwrap().parse::<i32>().unwrap();
 
         let conn = Connection::connect("postgres://selva@localhost/tickets", &SslMode::None).unwrap();
-        let stmt = conn.prepare("SELECT id, name FROM sessions").unwrap();
+        let stmt = conn.prepare("SELECT id, name FROM sessions where id = $1").unwrap();
 
-        let mut sessions: Vec<Session> = Vec::new();
-        for row in stmt.query(&[]).unwrap() {
-          let session = Session {
-            id: row.get(0),
-            name: row.get(1)
-          };
-          sessions.push(session);
+        let rows = stmt.query(&[&query]).unwrap();
+        match rows.iter().next() {
+            Some(row) => Ok(Response::with((status::Ok, json::encode(&Session {  id: row.get(0),   name: row.get(1)    }).unwrap() ))),
+            None => Ok(Response::with((status::NotFound, "Not Found" )))
         }
-
-        Ok(Response::with((status::Ok, json::encode(&sessions).unwrap())))
     }
   }
