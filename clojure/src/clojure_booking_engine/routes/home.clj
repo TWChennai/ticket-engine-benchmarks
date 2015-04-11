@@ -25,16 +25,9 @@
         seatNamesReq  (get (:params request) :seatNames)
         seatNames     (str/split seatNamesReq #",")
         orderId       (get (db/post-order<!) :id)]
-
-        (try
-        (doall (map
+        (try (doall (map
           (fn [seatName]
-            (prn orderId)
-            (prn sessionId)
-            (prn seatName)
-            (println "-------------")
-            (db/order-seat! {:orderId orderId :sessionId sessionId :seatName seatName})
-            )
+            (db/order-seat! {:orderId orderId :sessionId sessionId :seatName seatName}))
           seatNames))
         (catch SQLException e (.printStackTrace (.getCause e))))
         { :status 200}))
