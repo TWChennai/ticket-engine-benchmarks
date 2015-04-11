@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS orders_seats;
+DROP TABLE IF EXISTS order_seats;
 
 CREATE TABLE sessions (
     id integer NOT NULL,
@@ -39,14 +39,6 @@ CREATE SEQUENCE order_seats_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-CREATE SEQUENCE order_seats_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
 
 insert into sessions(id, name) values(1, 'FAST AND FURIOUS 7');
 insert into sessions(id, name) values(2, 'KINGS MAN');

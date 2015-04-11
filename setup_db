@@ -1,0 +1,3 @@
+dropdb tickets
+createdb tickets
+psql -U postgres -d tickets -a -f migration.sql
