@@ -12,7 +12,14 @@ SELECT seat_name FROM order_seats
 WHERE session_id = :sessionId;
 
 
---name:post-order
+--name:post-order<!
 -- Post an order
 INSERT INTO orders
 DEFAULT VALUES;
+
+
+--name: order-seat!
+-- Ordering a seat dammit!
+INSERT INTO order_seats
+(order_id,session_id,seat_name)
+VALUES (:orderId, :sessionId, :seatName);
