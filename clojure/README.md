@@ -1,10 +1,12 @@
 # clojure-booking-engine
 
-A Ticket booking engine. Work in progress.
+A Ticket booking engine in **Clojure**
 
 ## Prerequisites
 
 - [Leiningen][1] 2.0 or above installed.
+
+- Postgres for database
 
 [1]: https://github.com/technomancy/leiningen
 
@@ -16,6 +18,10 @@ A Ticket booking engine. Work in progress.
 
 - To start the web server `lein ring server`
 
-## Tasks done
+## Endpoints
 
-- `/sessions/:sessionId` works... but not fully ;)
+- **GET** `/sessions/:sessionId` lists all sessions.
+
+- **POST** `/orders --data "sessionId=:sessionId&seatName=:seatNames"` orders a ticket for a session.
+
+*Note: For POST you need an anti-forgery token for security purpose* ;)
