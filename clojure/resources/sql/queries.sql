@@ -9,7 +9,7 @@ WHERE id = :sessionId;
 SELECT seat_name FROM seats
 EXCEPT
 SELECT seat_name FROM order_seats
-WHERE order_id = :orderId;
+WHERE session_id = :sessionId;
 
 
 --name:post-order

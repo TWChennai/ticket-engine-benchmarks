@@ -1,3 +1,4 @@
 {
-  "sessionName": "{{ sessionName }}"
+  "sessionName": "{{ sessionName }}",
+  "seatsAvailable": "{{ seatsAvailable}}"
 }

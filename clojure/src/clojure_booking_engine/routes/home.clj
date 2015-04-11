@@ -12,12 +12,15 @@
   (layout/render "about.html"))
 
 (defn get-session [sessionId]
+  (def sessionIdAsString (read-string sessionId))
+  (def sessionName (get (first (db/get-session {:sessionId sessionIdAsString})) :name))
+  (def seatsAvailable
+    (apply str (interpose
+                  ","
+                  (map :seat_name (db/get-available-seats {:sessionId sessionIdAsString})))))
   (layout/render
     "session.json"
-    {:sessionName
-      (get (first (db/get-session {:sessionId (read-string sessionId)}))
-       :name
-       "Not Found")}))
+    {:sessionName sessionName :seatsAvailable seatsAvailable}))
 
 (defroutes home-routes
   (GET "/" [] (home-page))
