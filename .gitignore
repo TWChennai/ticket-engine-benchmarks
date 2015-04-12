@@ -1,7 +1,20 @@
 .idea
 nodejs/node_modules
-
+*.log
 
 # For erlang
 **/deps
 **/ebin
+
+# For clojure
+clojure/target
+clojure/lib
+clojure/classes
+clojure/checkouts
+clojure/pom.xml
+clojure/*.jar
+clojure/*.class
+clojure/.lein-*
+clojure/.env
+clojure/*.log
+clojure/.nrepl*
